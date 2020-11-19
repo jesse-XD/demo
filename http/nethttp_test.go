@@ -16,9 +16,27 @@ func TestGet(t *testing.T) {
 func TestHttpPost(t *testing.T) {
 	url := "http://php10.cn/req.php"
 	type data struct {
-		Name string
+		Name string `json:"name"`
 	}
 	content, err := HttpPost(url, data{
+		Name: "jesse",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(content)
+}
+
+func TestHttpDo(t *testing.T) {
+	methode := "POST"
+	url := "http://php10.cn/req.php"
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Cookie"] = "token=1234"
+	type data struct {
+		Name string `json:"name"`
+	}
+	content, err := HttpDo(methode, url, header, data{
 		Name: "jesse",
 	})
 	if err != nil {

@@ -35,7 +35,7 @@ func HttpPost(url string, req interface{}) (string, error) {
 	}
 	client := &http.Client{Timeout: 10 * time.Second}
 	// 发送post请求
-	ct := "application/x-www-form-urlencoded"
+	ct := "application/json"
 	resp, err := client.Post(url, ct, bytes.NewReader(body))
 	if err != nil {
 		return "", err
@@ -44,6 +44,34 @@ func HttpPost(url string, req interface{}) (string, error) {
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
+	}
+	return string(content), nil
+}
+
+// 自定义的请求方式，可以设置头参数
+func HttpDo(method string, url string, header map[string]string, req interface{}) (string, error) {
+	var body []byte
+	body, err := json.Marshal(req)
+	if err != nil {
+		return "", err
+	}
+	client := &http.Client{Timeout: 10 * time.Second}
+	nReq, err := http.NewRequest(method, url, bytes.NewReader(body))
+	if err != nil {
+		return "", err
+	}
+	// 设置请求头
+	for k, v := range header{
+		nReq.Header.Set(k, v)
+	}
+	// 发送请求
+	resp, err := client.Do(nReq)
+	if err != nil {
+		return "", err
+	}
+	content, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil
 	}
 	return string(content), nil
 }
