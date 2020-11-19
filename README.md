@@ -1,2 +1,2 @@
 # demo
-golang 的各种学习例子~~
+golang 的各种学习例子~
